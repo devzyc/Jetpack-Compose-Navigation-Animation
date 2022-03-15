@@ -3,16 +3,24 @@ package com.jetpack.navigationanimation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.annotation.DrawableRes
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
+import androidx.compose.foundation.layout.height
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
-import com.google.accompanist.navigation.animation.AnimatedNavHost
+import androidx.compose.runtime.remember
+import androidx.compose.ui.ExperimentalComposeUiApi
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
 import com.jetpack.navigationanimation.destinations.*
 import com.jetpack.navigationanimation.ui.theme.NavigationAnimationTheme
-import com.ramcosta.composedestinations.animations.utils.animatedComposable
-import com.ramcosta.composedestinations.navigation.navigateTo
+import com.ramcosta.composedestinations.spec.Route
 
 class MainActivity : ComponentActivity() {
     @OptIn(ExperimentalAnimationApi::class)
@@ -21,72 +29,83 @@ class MainActivity : ComponentActivity() {
         setContent {
             NavigationAnimationTheme {
                 Surface(color = MaterialTheme.colors.background) {
-                    NavAnimation()
+                    WanApp()
                 }
             }
         }
     }
 }
 
+@Suppress("EXPERIMENTAL_IS_NOT_ENABLED")
+@OptIn(ExperimentalComposeUiApi::class)
+enum class WanTabs(
+    val title: String,
+    @DrawableRes val icon: Int,
+    val destination: Route
+) {
+    ONE("1", R.drawable.ic_tab_one_black_24dp, S1Destination),
+    TWO("2", R.drawable.ic_square_black_24dp, S2Destination),
+    THREE("3", R.drawable.ic_wechat_black_24dp, S3Destination),
+    FOUR("4", R.drawable.ic_knowledge_system_black_24dp, S4Destination),
+}
+
 @ExperimentalAnimationApi
 @Composable
-fun NavAnimation() {
+fun WanApp() {
+    val scaffoldState = rememberScaffoldState()
     val navController = rememberAnimatedNavController()
 
-    AnimatedNavHost(
-        navController = navController,
-        startDestination = S1Destination.route
+    Scaffold(
+        scaffoldState = scaffoldState,
+        bottomBar = {
+            val tabRoutes = remember {
+                WanTabs.values().map { it.destination.route }
+            }
+            if (navController.currentBackStackEntryAsState().value?.destination?.route
+                in tabRoutes
+            ) {
+                BottomAppBar(modifier = Modifier.height(56.dp)) {
+                    HomeBottomNavigation(navController)
+                }
+            }
+        },
     ) {
-        animatedComposable(S1Destination) { _, _ ->
-            S1(
-                onClick = { navController.navigateTo(direction = S2Destination) }
-            )
-        }
-        animatedComposable(S2Destination) { _, _ ->
-            S2(
-                onClick = { navController.navigateTo(direction = S3Destination) },
-                onToLoginClick = { navController.navigateTo(direction = LoginDestination) }
-            )
-        }
-        animatedComposable(S3Destination) { _, _ ->
-            S3(
-                onClick = { navController.navigateTo(direction = S4Destination) }
-            )
-        }
-        animatedComposable(LoginDestination) { _, _ ->
-            Login(
-                onLoginClick = {
-                    navController.navigateTo(S1Destination) {
-                        popUpTo(S1Destination.route) {
-                            inclusive = true
+        AppNavigation(
+            navController = navController,
+        )
+    }
+}
+
+@Composable
+fun HomeBottomNavigation(
+    navController: NavController
+) {
+    val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
+        ?: WanTabs.ONE.destination.route
+
+    BottomNavigation {
+        WanTabs.values().forEach { tab ->
+            val selected = currentRoute == tab.destination.route
+
+            BottomNavigationItem(
+                icon = { Icon(painter = painterResource(tab.icon), contentDescription = tab.title) },
+                label = { Text(tab.title) },
+                selected = selected,
+                onClick = {
+                    if (!selected) {
+                        navController.navigate(tab.destination.route) {
+                            popUpTo(navController.graph.startDestinationId) {
+                                saveState = true
+                            }
+                            launchSingleTop = true
+                            restoreState = true
                         }
                     }
-                }
+                },
+                selectedContentColor = MaterialTheme.colors.secondary,
+                unselectedContentColor = LocalContentColor.current,
+                modifier = Modifier.navigationBarsPadding()
             )
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
