@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: com.google.accompanist:accompanist-navigation-material:0.22.0-rc@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/7c25c81477fec90a02cf70f8a079836f/transformed/jetified-accompanist-navigation-material-0.22.0-rc/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/7c25c81477fec90a02cf70f8a079836f/transformed/jetified-accompanist-navigation-material-0.22.0-rc/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/7c25c81477fec90a02cf70f8a079836f/transformed/jetified-accompanist-navigation-material-0.22.0-rc/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.accompanist/accompanist-navigation-material/0.22.0-rc/3e0a78adaa1cb2a377899f00fd28301a0dd74c76/accompanist-navigation-material-0.22.0-rc-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.google.accompanist/accompanist-navigation-material/0.22.0-rc/37cdbc7e3bb8d63fcf42fce53e1d2f3bbc8fbe78/accompanist-navigation-material-0.22.0-rc-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

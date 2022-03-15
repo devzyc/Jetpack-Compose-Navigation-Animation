@@ -3,29 +3,19 @@ package com.jetpack.navigationanimation
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalAnimationApi
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.material.*
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.navigation.NavController
-import androidx.navigation.NavHostController
 import com.google.accompanist.navigation.animation.AnimatedNavHost
-import com.google.accompanist.navigation.animation.composable
 import com.google.accompanist.navigation.animation.rememberAnimatedNavController
+import com.jetpack.navigationanimation.destinations.*
 import com.jetpack.navigationanimation.ui.theme.NavigationAnimationTheme
+import com.ramcosta.composedestinations.animations.utils.animatedComposable
+import com.ramcosta.composedestinations.navigation.navigateTo
 
 class MainActivity : ComponentActivity() {
-    @ExperimentalAnimationApi
+    @OptIn(ExperimentalAnimationApi::class)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -45,148 +35,38 @@ fun NavAnimation() {
 
     AnimatedNavHost(
         navController = navController,
-        startDestination = "Screen_one"
+        startDestination = S1Destination.route
     ) {
-        composable(
-            "Screen_one",
-            enterTransition = { initial, _ ->
-                when (initial.destination.route) {
-                    "Screen_two" ->
-                        slideIntoContainer(AnimatedContentScope.SlideDirection.Left, animationSpec = tween(800))
-                    else -> null
-                }
-            },
-            exitTransition = { _, target ->
-                when (target.destination.route) {
-                    "Screen_two" ->
-                        slideOutOfContainer(AnimatedContentScope.SlideDirection.Left, animationSpec = tween(800))
-                    else -> null
-                }
-            },
-            popEnterTransition = { initial, _ ->
-                when (initial.destination.route) {
-                    "Screen_two" ->
-                        slideIntoContainer(AnimatedContentScope.SlideDirection.Right, animationSpec = tween(800))
-                    else -> null
-                }
-            },
-            popExitTransition = { _, target ->
-                when (target.destination.route) {
-                    "Screen_two" ->
-                        slideOutOfContainer(AnimatedContentScope.SlideDirection.Right, animationSpec = tween(800))
-                    else -> null
-                }
-            }
-        ) {
-            ScreenOne(navController)
+        animatedComposable(S1Destination) { _, _ ->
+            S1(
+                onClick = { navController.navigateTo(direction = S2Destination) }
+            )
         }
-
-        //Second Screen
-        composable(
-            "Screen_two",
-            enterTransition = { initial, _ ->
-                when (initial.destination.route) {
-                    "Screen_one" ->
-                        slideIntoContainer(AnimatedContentScope.SlideDirection.Left, animationSpec = tween(800))
-                    else -> null
-                }
-            },
-            exitTransition = { _, target ->
-                when (target.destination.route) {
-                    "Screen_one" ->
-                        slideOutOfContainer(AnimatedContentScope.SlideDirection.Left, animationSpec = tween(800))
-                    else -> null
-                }
-            },
-            popEnterTransition = { initial, _ ->
-                when (initial.destination.route) {
-                    "Screen_one" ->
-                        slideIntoContainer(AnimatedContentScope.SlideDirection.Right, animationSpec = tween(800))
-                    else -> null
-                }
-            },
-            popExitTransition = { _, target ->
-                when (target.destination.route) {
-                    "Screen_one" ->
-                        slideOutOfContainer(AnimatedContentScope.SlideDirection.Right, animationSpec = tween(800))
-                    else -> null
-                }
-            }
-        ) {
-            ScreenTwo(navController)
+        animatedComposable(S2Destination) { _, _ ->
+            S2(
+                onClick = { navController.navigateTo(direction = S3Destination) },
+                onToLoginClick = { navController.navigateTo(direction = LoginDestination) }
+            )
         }
-    }
-}
-
-@Composable
-fun ScreenOne(navController: NavHostController) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(MaterialTheme.colors.primary),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        SampleButton(
-            "Navigate Horizontal",
-            Modifier
-                .wrapContentWidth()
-                .then(Modifier.align(Alignment.CenterHorizontally))
-        ) {
-            navController.navigate("Screen_two")
+        animatedComposable(S3Destination) { _, _ ->
+            S3(
+                onClick = { navController.navigateTo(direction = S4Destination) }
+            )
         }
-    }
-}
-
-@Composable
-fun ScreenTwo(navController: NavHostController) {
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(Color.Red),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        BackButton(navController)
-    }
-}
-
-@Composable
-fun SampleButton(
-    text: String,
-    modifier: Modifier = Modifier,
-    listener: () -> Unit = {}
-) {
-    Button(
-        onClick = listener,
-        colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray),
-    ) {
-        Text(
-            text = text
-        )
-    }
-}
-
-@Composable
-fun BackButton(
-    navController: NavController
-) {
-    if (navController.currentBackStackEntry == LocalLifecycleOwner.current &&
-            navController.previousBackStackEntry != null
-    ) {
-        Button(
-            onClick = {
-                navController.popBackStack()
-            },
-            colors = ButtonDefaults.buttonColors(backgroundColor = Color.LightGray),
-            modifier = Modifier.wrapContentWidth()
-        ) {
-            Text(
-                text = "Go to Previous Screen"
+        animatedComposable(LoginDestination) { _, _ ->
+            Login(
+                onLoginClick = {
+                    navController.navigateTo(S1Destination) {
+                        popUpTo(S1Destination.route) {
+                            inclusive = true
+                        }
+                    }
+                }
             )
         }
     }
 }
+
 
 
 

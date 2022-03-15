@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Gradle: io.github.raamcosta.compose-destinations:animations-core:1.1.2-beta@aar">
+    <CLASSES>
+      <root url="jar://$USER_HOME$/.gradle/caches/transforms-3/6ac7a16b82b74bdc322c0008022e1bba/transformed/jetified-animations-core-1.1.2-beta/jars/classes.jar!/" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/6ac7a16b82b74bdc322c0008022e1bba/transformed/jetified-animations-core-1.1.2-beta/res" />
+      <root url="file://$USER_HOME$/.gradle/caches/transforms-3/6ac7a16b82b74bdc322c0008022e1bba/transformed/jetified-animations-core-1.1.2-beta/AndroidManifest.xml" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.github.raamcosta.compose-destinations/animations-core/1.1.2-beta/4118350f963a997ecc162a8685f6f52ceaadff16/animations-core-1.1.2-beta-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/io.github.raamcosta.compose-destinations/animations-core/1.1.2-beta/2c3745647b655c6c4b6cf3723dc0d99fad2e92ea/animations-core-1.1.2-beta-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
